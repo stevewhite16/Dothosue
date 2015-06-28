@@ -3,4 +3,6 @@
 *.xls
 *.xlsx
 /data
+/results
 *.Rhistory
+*.RData
