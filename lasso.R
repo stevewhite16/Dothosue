@@ -38,3 +38,16 @@ lm.risk_score <- lm(novisit ~ risk_score, data = data)
 rs_novisit <- predict(lm.risk_score)
 
 cor(lasso_novisit, novisit)
+lasso_mse <- mean((lasso_novisit - novisit)^2)
+rs_mse <- mean((rs_novisit - novisit)^2)
+
+# which one is better able to predict who will have > 10 visits?
+novisit_90th <- quantile(novisit, 0.9)
+hotspot <- (novisit > novisit_90th)
+lasso_90th <- quantile(lasso_novisit, 0.9)
+rs_90th <- quantile(risk_score, 0.9)
+lasso_hotspot <- (lasso_novisit > lasso_90th)
+rs_hotspot <- (risk_score > rs_90th)
+
+table(hotspot, lasso_hotspot)
+table(hotspot, rs_hotspot)
