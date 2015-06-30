@@ -14,13 +14,15 @@ predictors[NAs] <- 0
 set.seed(1)
 NA_y <- is.na(data$hospitalization)
 data$hospitalization[NA_y] <- 0
-hosp <- data$hospitalization
+hosp <- as.factor(data$hospitalization)
 data_for_tree <- data.frame(hosp, predictors)
-n = nrow(x)
+n = nrow(data_for_tree)
 train <- sample(1:n, n/2, replace=FALSE) # pick a training set
 test <- (-train)
 
 hosp.tree <- tree(formula = hosp ~ ., data = data_for_tree, subset = train)
+plot(hosp.tree)
+text(hosp.tree, pretty=0)
 
 set.seed(1)
 cv.hosp.tree <- cv.tree(hosp.tree, FUN=prune.misclass)
