@@ -11,26 +11,29 @@ predictors <- data[,risk_vars]
 NAs <- is.na(predictors)
 predictors[NAs] <- 0
 
-set.seed(1)
+set.seed(5)
 NA_y <- is.na(data$hospitalization)
 data$hospitalization[NA_y] <- 0
-hosp <- as.factor(data$hospitalization)
+hosp <- data$hospitalization
 data_for_tree <- data.frame(hosp, predictors)
 n = nrow(data_for_tree)
 train <- sample(1:n, n/2, replace=FALSE) # pick a training set
 test <- (-train)
 
+n_train <- length(train)
+overfit <- tree.control(nobs=n_train, minsize=2, mindev=0)
 hosp.tree <- tree(formula = hosp ~ ., data = data_for_tree, subset = train)
 plot(hosp.tree)
 text(hosp.tree, pretty=0)
 
 set.seed(1)
-cv.hosp.tree <- cv.tree(hosp.tree, FUN=prune.misclass)
+cv.hosp.tree <- cv.tree(hosp.tree, FUN=prune.tree)
 best_size <- cv.hosp.tree$size[which.min(cv.hosp.tree$dev)]
-hosp.tree.pruned <- prune.misclass(hosp.tree, best=best_size)
+hosp.tree.pruned <- prune.tree(hosp.tree, best=best_size)
 
-predictions <- predict(hosp.tree.pruned, data_for_tree[test, ], type="class")
-table(predictions, data_for_tree$hosp[test])
+# this code doesn't work since it isn't for a factor y variable anymore
+# predictions <- predict(hosp.tree.pruned, data_for_tree[test, ], type="class")
+# table(predictions, data_for_tree$hosp[test])
   
 plot(hosp.tree.pruned)
 text(hosp.tree.pruned, pretty=0)
