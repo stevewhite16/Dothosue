@@ -51,3 +51,10 @@ rs_hotspot <- (risk_score > rs_90th)
 
 table(hotspot, lasso_hotspot)
 table(hotspot, rs_hotspot)
+
+# Try PCR regression and Partial Least Squares - it sucks
+library(pls)
+num_er <- y
+data <- data.frame(num_er, predictors)
+er.pcr <- pcr(num_er~., data=data, scale=FALSE, validation="CV")
+validationplot(er.pcr, val.type="MSEP")
