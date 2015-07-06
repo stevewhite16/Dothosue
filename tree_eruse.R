@@ -31,9 +31,10 @@ best_size <- cv.er_tree$size[which.min(cv.er_tree$dev)]
 er_tree.pruned <- prune.tree(er_tree, best=best_size)
 
 # try a classification tree for high_er_use
-cutoff <- 15
+cutoff <- 10
 high_er_use <- (novisit >= cutoff)
 high_er_use <- as.factor(high_er_use)
+levels(high_er_use) <- c("l","h")
 data <- data.frame(high_er_use, predictors)
 n <- nrow(data)
 train <- sample(1:n, n/2, replace=FALSE) # pick a training set
